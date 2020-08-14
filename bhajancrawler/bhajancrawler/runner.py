@@ -1,14 +1,15 @@
 from bhajancrawler.bhajancrawler.spiders.bhajan_spider import BhajanSpider
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
+import src.config as config
 
 
 class Runner:
 
     def __init__(self, **kwargs):
         options = {
-            'feed_uri': 'data/raw/bhajans_info.json',
-            'feed_format': 'json'
+            'feed_uri': config.CRAWLER_SETTINGS['feed_uri'],
+            'feed_format': config.CRAWLER_SETTINGS['feed_format'],
         }
         options.update(kwargs)
         self.settings = Settings({
