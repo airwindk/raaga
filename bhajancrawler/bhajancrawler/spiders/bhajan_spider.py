@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
-import scrapy
 
-import os
-
-os.chdir('..')
-
-import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
@@ -36,5 +30,6 @@ class BhajanSpider(CrawlSpider):
             'level': extract_with_xpath("""//div[contains(@class, 'level-row')]//div[2]"""),
             'tempo': extract_with_xpath("""//div[contains(@class, 'tempo-row')]//div[2]""")
         }
+
         if bhajan_info['link'] is not None:
-            yield bhajan_info
+            return bhajan_info
