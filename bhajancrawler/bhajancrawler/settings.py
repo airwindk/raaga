@@ -16,7 +16,7 @@ NEWSPIDER_MODULE = 'bhajancrawler.spiders'
 
 # Feed info
 FEED_FORMAT = 'json'
-FEED_URI = 'data/raw/bhajans_info_1.json'
+FEED_URI = 'data/raw/bhajans_info.json'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
