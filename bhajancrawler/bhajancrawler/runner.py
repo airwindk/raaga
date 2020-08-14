@@ -2,6 +2,7 @@ from bhajancrawler.bhajancrawler.spiders.bhajan_spider import BhajanSpider
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 import src.config as config
+import logging
 
 
 class Runner:
@@ -12,6 +13,7 @@ class Runner:
             'feed_format': config.CRAWLER_SETTINGS['feed_format'],
         }
         options.update(kwargs)
+
         self.settings = Settings({
             'FEED_URI': options['feed_uri'],
             'FEED_FORMAT': options['feed_format']
