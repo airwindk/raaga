@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import src.config as config
+
 # Scrapy settings for bhajancrawler project
 #
 # For simplicity, this file contains only settings considered important or
@@ -15,8 +17,8 @@ SPIDER_MODULES = ['bhajancrawler.spiders']
 NEWSPIDER_MODULE = 'bhajancrawler.spiders'
 
 # Feed info
-FEED_FORMAT = 'json'
-FEED_URI = 'data/raw/bhajans_info.json'
+FEED_FORMAT = config.CRAWLER_SETTINGS['feed_format']
+FEED_URI = config.CRAWLER_SETTINGS['feed_uri']
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
