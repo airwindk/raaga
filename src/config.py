@@ -31,3 +31,8 @@ labels_map = {'raaga':  {'Abheri / Bhimpalas': 0,
                          'Vakulabharanam': 30,
                          'Yaman Kalyan': 31}
              }
+
+CRAWLER_SETTINGS = {
+    'feed_uri': 'data/raw/bhajans_info.json',
+    'feed_format': 'json',
+}
