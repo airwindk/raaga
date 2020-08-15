@@ -1,7 +1,6 @@
 import json
 import os
 
-os.chdir('..')
 import pandas as pd
 import matplotlib.pyplot as plt
 from collections import Counter
@@ -19,6 +18,7 @@ class RaagaPreprocessor:
         options = {'remove': ['Major (', 'Minor (', '~', ')']}
         options.update(kwargs)
 
+        print(raaga_list)
         raaga_list_clean = [
             reduce(lambda raw, old: raw.replace(old, ''), [raaga] + options['remove'])
             for raaga in raaga_list
@@ -53,7 +53,7 @@ class RaagaPreprocessor:
 
 class Formatter:
 
-    def __init__(self, file=config.CRAWLER_SETTINGS['file_uri']):
+    def __init__(self, file=config.CRAWLER_SETTINGS['feed_uri']):
         self.file = file
 
 
@@ -65,9 +65,14 @@ class Formatter:
 
     @staticmethod
     def _get_audio_file_name(url, dir="data/raw/bhajans_audio/"):
-        file_format = Path(url).suffix
-        file_name = Formatter._get_hash(url) + file_format
-        return os.path.join(dir, file_name)
+        file_name = None
+
+        if url is not None:
+            file_format = Path(url).suffix
+            file_name = Formatter._get_hash(url) + file_format
+            file_name = os.path.join(dir, file_name)
+
+        return file_name
 
     def format_bhajan(self, **kwargs):
         options = {'input_dir': self.file,
@@ -78,20 +83,31 @@ class Formatter:
 
         with open(options['input_dir'], "r+") as f:
             bhajans = json.loads(f.read())
+            bhajans = [bhajan for bhajan in bhajans if bhajan['raaga'] is not None]
 
-            # clean and filter raagas
+            # clean, get final raagas and generate raaga_map
             raaga_list = RaagaPreprocessor.clean([bhajan['raaga'] for bhajan in bhajans])
             final_raagas = set(RaagaPreprocessor.filter(raaga_list))
-            bhajans = [bhajan.update({'raaga': raaga})
-                       for raaga, bhajan in zip(raaga_list, self.bhajans) if raaga in final_raagas
-                       ]
 
             # generate audio file name and add to dict
             audio_file_names = [Formatter._get_audio_file_name(bhajan['link']) for bhajan in bhajans]
-            self.bhajans = [bhajan.update({'file_name': file}) for file, bhajan in zip(audio_file_names, bhajans)]
+
+            # add cleaned raagas and file_name to dictionary
+            [bhajan.update({'raaga': raaga}) for raaga, bhajan in zip(raaga_list, bhajans)]
+            [bhajan.update({'file_name': file}) for file, bhajan in zip(audio_file_names, bhajans)]
+
+            # filter out minority classes
+            bhajans = [bhajan for bhajan in bhajans if bhajan['raaga'] in final_raagas]
+            RaagaPreprocessor.raaga_to_idx([bhajan['raaga'] for bhajan in bhajans])
+
+            self.bhajans = bhajans
 
 
         if options['save_to_file']:
             with open(options['output_dir'], "w+") as f:
                 json.dump(self.bhajans, f)
+
+if __name__ == "__main__":
+    formatter = Formatter()
+    formatter.format_bhajan()
 
