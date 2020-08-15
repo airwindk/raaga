@@ -2,7 +2,7 @@
 
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-
+import src.config as config
 
 class BhajanSpider(CrawlSpider):
 
@@ -12,6 +12,8 @@ class BhajanSpider(CrawlSpider):
         'https://sairhythms.org/'
 
     ]
+
+    file_types = ['mp3', 'm4a']
 
     rules = (
         Rule(LinkExtractor(allow="/song/"), callback='parse_item', follow=True),
@@ -32,4 +34,5 @@ class BhajanSpider(CrawlSpider):
         }
 
         if bhajan_info['link'] is not None:
-            return bhajan_info
+            if any(f".{key}" in bhajan_info['link'] for key in self.file_types):
+                return bhajan_info
