@@ -4,7 +4,8 @@ import torch
 from torch.utils.data import Dataset, DataLoader, Subset, WeightedRandomSampler
 import librosa
 
-import config
+from src import config
+import json
 
 
 import os
@@ -58,8 +59,9 @@ class BhajanDataset(Dataset):
     def __init__(self, file_name, **kwargs):
         options = {'target': 'raaga'}
         options.update(kwargs)
-        
-        df = pd.read_csv(file_name)
+
+        with open(file_name, "r+") as f:
+            df = pd.DataFrame(json.loads(f.read()))
         
         if options['target'] not in df.columns:
             raise ValueError(f"Target col {options['target']} not found")
@@ -103,7 +105,7 @@ def get_sampler(data):
     
     return sampler
 
-def get_dataloaders(file_name="data/processed/bhajans_info_cleaned.csv", batch_size=10, lengths=[0.7,0.2,0.1]):
+def get_dataloaders(file_name="data/processed/bhajans_info_cleaned.json", batch_size=10, lengths=[0.7,0.2,0.1]):
     data = BhajanDataset(file_name=file_name)
     
     train_size = int(lengths[0] * len(data))
@@ -125,4 +127,3 @@ def get_dataloaders(file_name="data/processed/bhajans_info_cleaned.csv", batch_s
                              batch_size=batch_size)
     
     return train_loader, valid_loader, test_loader
-
