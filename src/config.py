@@ -33,6 +33,8 @@ labels_map = {'raaga':  {'Abheri / Bhimpalas': 0,
              }
 
 CRAWLER_SETTINGS = {
-    'feed_uri': 'data/raw/bhajans_info.json',
+    'feed_uri': 'data/raw/bhajans_info_2.json',
     'feed_format': 'json',
 }
+
+RAAGA_COUNT_THRESH = 10
