@@ -71,7 +71,7 @@ class Formatter:
 
     def format_bhajan(self, **kwargs):
         options = {'input_dir': self.file,
-                   'save_to_file': True
+                   'save_to_file': True,
                    'output_dir': "data/processed/bhajans_info_cleaned.json"
                    }
         options.update(kwargs)
