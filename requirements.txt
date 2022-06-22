@@ -1,5 +1,5 @@
 librosa==0.8.0
-numpy==1.19.1
+numpy==1.22.0
 pandas==1.0.5
 matplotlib==3.3.0
 Scrapy==2.1.0
